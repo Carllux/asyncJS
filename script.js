@@ -71,23 +71,33 @@ const renderCountry = function (data, className = '') {
 
 const getCountryData = async function (country) {
   const response = await fetch(`https://restcountries.com/v3.1/name/${country}`)
-  console.log(response);
+  .catch(err => alert(err))
+  console.log(typeof response);
+
   return response.json()
     .then((data) => {
       renderCountry(data[0])
       const neighbour = (data[0]?.borders[0])
-      if(!neighbour) return;
+      if (!neighbour) return;
 
       // Country 2 returned 
       return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
-      
-    }).then(data => data.json())
+    })
+
+    .then(data => data.json())
     .then(nCountry => renderCountry(nCountry[0], 'neighbour'))
-  // .then((data) => console.log((data[0]?.borders[0])));
-}
+    .catch(err => alert(err))
+    
+  }
+    // .then((data) => console.log((data[0]?.borders[0])));
 
 
-getCountryData('brazil')
+// getCountryData('brazil')
+
+btn.addEventListener('click', function(e) {
+  e.preventDefault()
+  getCountryData('portugal')
+})
 
 // getCountryAndNeighbor('japan')
 // getCountryAndNeighbor('usa')
