@@ -40,6 +40,7 @@ const getCountryAndNeighbor = function (country) {
     console.log(data);
     // get neighbor country 
     const neighbors = data.borders?.[0] 
+    // we use guard clause to avoid the null result
     if(!neighbors) return;
     console.log(neighbors)
 
