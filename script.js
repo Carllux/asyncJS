@@ -27,37 +27,40 @@ const renderCountry = function (data, className = '') {
 }
 
 
-const getCountryAndNeighbor = function (country) {
-  const request = new XMLHttpRequest()
-  request.open('GET', `https://restcountries.com/v3.1/name/${country}`)
-  request.send();
+// const getCountryAndNeighbor = function (country) {
+//   const request = new XMLHttpRequest()
+//   request.open('GET', `https://restcountries.com/v3.1/name/${country}`)
+//   request.send();
 
 
 
-  request.addEventListener('load', function () {
-    const [data] = JSON.parse(this.responseText)
-    renderCountry(data)
-    console.log(data);
-    // get neighbor country 
-    const neighbors = data.borders?.[0] 
-    // we use guard clause to avoid the null result
-    if(!neighbors) return;
-    console.log(neighbors)
+//   request.addEventListener('load', function () {
+//     const [data] = JSON.parse(this.responseText)
+//     renderCountry(data)
+//     console.log(data);
+//     // get neighbor country 
+//     const neighbors = data.borders?.[0] 
+//     // we use guard clause to avoid the null result
+//     if(!neighbors) return;
+//     console.log(neighbors)
 
-    const request2 = new XMLHttpRequest()
-    // const [data] = JSON.parse(this.responseText)
-    request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbors}`)
-    request2.send();
+//     const request2 = new XMLHttpRequest()
+//     // const [data] = JSON.parse(this.responseText)
+//     request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbors}`)
+//     request2.send();
 
-    request2.addEventListener('load', function () {
-      // const [data2] = await JSON.parse(this.responseText)
-      const borderData = JSON.parse(this.responseText)
-      console.log(borderData?.[0])
-      renderCountry(borderData?.[0], 'neighbour')
-    })
+//     request2.addEventListener('load', function () {
+//       // const [data2] = await JSON.parse(this.responseText)
+//       const borderData = JSON.parse(this.responseText)
+//       console.log(borderData?.[0])
+//       renderCountry(borderData?.[0], 'neighbour')
+//     })
 
-  })
-}
+//   })
+// }
+
+const request = fetch(`https://restcountries.com/v3.1/name/portugal`)
+console.log(request)
 
 // getCountryAndNeighbor('japan')
-getCountryAndNeighbor('usa')
+// getCountryAndNeighbor('usa')
