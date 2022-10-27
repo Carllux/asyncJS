@@ -7,7 +7,7 @@ const countriesContainer = document.querySelector('.countries');
 const renderCountry = function (data, className = '') {
   // const [data] = JSON.parse(this.responseText)
   const languages = Object.values(data.languages);
-  console.log(languages)
+  // console.log(languages)
   const currencies = Object.keys(data.currencies);
 
   const html = `        
@@ -59,8 +59,35 @@ const renderCountry = function (data, className = '') {
 //   })
 // }
 
-const request = fetch(`https://restcountries.com/v3.1/name/portugal`)
-console.log(request)
+// const request = fetch(`https://restcountries.com/v3.1/name/portugal`)
+
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v3.1/name/${country}`)
+//   .then(function(response) {
+//     console.log(response);
+//     return response.json();
+//   }).then(function(data) { console.log(data[0])});
+// }
+
+const getCountryData = async function (country) {
+  const response = await fetch(`https://restcountries.com/v3.1/name/${country}`)
+  console.log(response);
+  return response.json()
+    .then((data) => {
+      renderCountry(data[0])
+      const neighbour = (data[0]?.borders[0])
+      if(!neighbour) return;
+
+      // Country 2 returned 
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
+      
+    }).then(data => data.json())
+    .then(nCountry => renderCountry(nCountry[0], 'neighbour'))
+  // .then((data) => console.log((data[0]?.borders[0])));
+}
+
+
+getCountryData('brazil')
 
 // getCountryAndNeighbor('japan')
 // getCountryAndNeighbor('usa')
