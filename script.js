@@ -4,27 +4,34 @@ const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
-const renderCountry = function (data, className = '') {
-  // const [data] = JSON.parse(this.responseText)
-  const languages = Object.values(data.languages);
-  // console.log(languages)
-  const currencies = Object.keys(data.currencies);
 
-  const html = `        
-    <article class="country ${className}">
-    <img class="country__img" src="${data.flags?.png}" />
-    <div class="country__data">
-      <h3 class="country__name">${data.name['common']}</h3>
-      <h4 class="country__region">${data.region}</h4>
-      <p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(1)} Millions</p>
-      <p class="country__row"><span>🗣️</span>${languages[0]}</p>
-      <p class="country__row"><span>💰</span>${currencies[0]}</p>
-    </div>
-  </article>`
+// const renderCountry = function (data, className = '') {
+//   // const [data] = JSON.parse(this.responseText)
+//   const languages = Object.values(data.languages);
 
-  countriesContainer.insertAdjacentHTML('beforeend', html)
-  countriesContainer.style.opacity = 1;
-}
+//   // console.log(languages)
+//   const currencies = Object.keys(data.currencies);
+
+//   const html = `        
+//     <article class="country ${className}">
+//     <img class="country__img" src="${data.flags?.png}" />
+//     <div class="country__data">
+//       <h3 class="country__name">${data.name['common']}</h3>
+//       <h4 class="country__region">${data.region}</h4>
+//       <p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(1)} Millions</p>
+//       <p class="country__row"><span>🗣️</span>${languages[0]}</p>
+//       <p class="country__row"><span>💰</span>${currencies[0]}</p>
+//     </div>
+//   </article>`
+
+//   countriesContainer.insertAdjacentHTML('beforeend', html)
+//   // countriesContainer.style.opacity = 1;
+// }
+
+// const renderError = function (msg) {
+//   countriesContainer.insertAdjacentHTML('beforeend', msg);
+//   // countriesContainer.style.opacity = 1;
+// }
 
 
 // const getCountryAndNeighbor = function (country) {
@@ -69,35 +76,88 @@ const renderCountry = function (data, className = '') {
 //   }).then(function(data) { console.log(data[0])});
 // }
 
-const getCountryData = async function (country) {
-  const response = await fetch(`https://restcountries.com/v3.1/name/${country}`)
-  .catch(err => alert(err))
-  console.log(typeof response);
 
-  return response.json()
-    .then((data) => {
-      renderCountry(data[0])
-      const neighbour = (data[0]?.borders[0])
-      if (!neighbour) return;
 
-      // Country 2 returned 
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
-    })
+// const getCountryData = async function (country) {
+//   const response = await fetch(`https://restcountries.com/v3.1/name/${country}`)
+//     .catch(err => renderError(`Something went wrong ${err}`))
+//     .finally(countriesContainer.style.opacity = 1)
+//     // console.log(response.ok)
 
-    .then(data => data.json())
-    .then(nCountry => renderCountry(nCountry[0], 'neighbour'))
-    .catch(err => alert(err))
-    
-  }
-    // .then((data) => console.log((data[0]?.borders[0])));
+//     if (!response.ok) throw new Error('Country not found: ')
+
+//   return response.json()
+//     .then((data) => {
+//       renderCountry(data[0])
+//       const neighbour = (data[0]?.borders[0])
+//       if (!neighbour) return;
+
+//       // Country 2 returned 
+//       return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
+//     })
+//     .then(data => data.json())
+//     .then(nCountry => renderCountry(nCountry[0], 'neighbour'))
+
+
+// }
+// .then((data) => console.log((data[0]?.borders[0])));
 
 
 // getCountryData('brazil')
 
-btn.addEventListener('click', function(e) {
-  e.preventDefault()
-  getCountryData('portugal')
-})
+// btn.addEventListener('click', function (e) {
+//   e.preventDefault()
+//   getCountryData('japan')
+//   // getCountryData('asd')
+
+// })
+
+// getCountryData('shdjasdja')
 
 // getCountryAndNeighbor('japan')
 // getCountryAndNeighbor('usa')
+
+// console.log('Test Start');;
+// setTimeout(() => console.log('0 sec timer'), 0);
+// Promise.resolve('Resolved Promise 1').then(res => console.log(res))
+
+// Promise.resolve('Resolved Promise 2').then(res => { 
+//   for(let i= 9; i<1000000000; i++) {  }
+//   console.log(res)});
+
+// console.log('test End');
+
+// const lotteryPromises = new Promise(function (resolve, reject) {
+//   console.log('Lotter draw is happening, please wait...');
+//   setTimeout(() => {
+
+//     if (Math.random() >= 0.5) {
+//       resolve(' You win 👍');
+//     } else {
+//       reject(new Error('You lost your money'))
+//     }
+
+//   }, 2000)
+
+
+// })
+
+// lotteryPromises.then(res => console.log(res)).catch(err => console.error(err))
+
+// // promisifying setTimeout
+// const wait = function (seconds) {
+//   return new Promise((resolve, _reject) => {
+//     setTimeout(resolve, seconds * 1000)
+//   })
+// }
+
+// wait(2)
+//   .then(() => {
+//     console.log(`I waited for 2 seconds`)
+//     return wait(1)
+//   })
+//   .then(() => console.log('I waited for another second'))
+
+//   // we use it to skip callback hell
+
+//   Promise.resolve('abc').then(x => console.log(x))
