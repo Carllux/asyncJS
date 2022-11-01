@@ -5,28 +5,28 @@ const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
 
-// const renderCountry = function (data, className = '') {
-//   // const [data] = JSON.parse(this.responseText)
-//   const languages = Object.values(data.languages);
+const renderCountry = function (data, className = '') {
+  // const [data] = JSON.parse(this.responseText)
+  const languages = Object.values(data.languages);
 
-//   // console.log(languages)
-//   const currencies = Object.keys(data.currencies);
+  // console.log(languages)
+  const currencies = Object.keys(data.currencies);
 
-//   const html = `        
-//     <article class="country ${className}">
-//     <img class="country__img" src="${data.flags?.png}" />
-//     <div class="country__data">
-//       <h3 class="country__name">${data.name['common']}</h3>
-//       <h4 class="country__region">${data.region}</h4>
-//       <p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(1)} Millions</p>
-//       <p class="country__row"><span>🗣️</span>${languages[0]}</p>
-//       <p class="country__row"><span>💰</span>${currencies[0]}</p>
-//     </div>
-//   </article>`
+  const html = `        
+    <article class="country ${className}">
+    <img class="country__img" src="${data.flags?.png}" />
+    <div class="country__data">
+      <h3 class="country__name">${data.name['common']}</h3>
+      <h4 class="country__region">${data.region}</h4>
+      <p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(1)} Millions</p>
+      <p class="country__row"><span>🗣️</span>${languages[0]}</p>
+      <p class="country__row"><span>💰</span>${currencies[0]}</p>
+    </div>
+  </article>`
 
-//   countriesContainer.insertAdjacentHTML('beforeend', html)
-//   // countriesContainer.style.opacity = 1;
-// }
+  countriesContainer.insertAdjacentHTML('beforeend', html)
+  // countriesContainer.style.opacity = 1;
+}
 
 // const renderError = function (msg) {
 //   countriesContainer.insertAdjacentHTML('beforeend', msg);
@@ -161,3 +161,57 @@ const countriesContainer = document.querySelector('.countries');
 //   // we use it to skip callback hell
 
 //   Promise.resolve('abc').then(x => console.log(x))
+
+// navigator.geolocation.getCurrentPosition = (
+//   position => console.log(position),
+//   err => console.log(err)
+// )
+// console.log('Getting position')
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition = (
+    // position => resolve(position),
+    //   err => reject(err)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+
+  });
+};
+
+// getPosition().then(pos => console.log(pos))
+
+const whereAmI = function () {
+  getPosition().then(pos => {
+    const {latitude, longitude} = pos.coords;
+    const lat = latitude, lng = longitude;
+    console.log( lat, lng)
+    // console.log(pos.coords)
+    return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+  })
+
+
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+
+    })
+
+    .then(data => {
+      console.log(data);
+      console.log(`You're in ${data.city} ${data.country}`);
+
+      return fetch(`https://restcountries.com/v3.1/name/${data.country}`)
+    })
+
+    .then(res => {
+      if(!res.ok) throw new Error(`Country not found (${res.status})`);
+
+      return res.json()
+    })
+
+    .then(data => renderCountry(data[0]))
+    .catch(err => console.error(err));
+}
+
+btn.addEventListener('click', whereAmI)
