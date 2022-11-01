@@ -7,6 +7,7 @@ const countriesContainer = document.querySelector('.countries');
 
 const renderCountry = function (data, className = '') {
   // const [data] = JSON.parse(this.responseText)
+  console.log(data)
   const languages = Object.values(data.languages);
 
   // console.log(languages)
@@ -25,7 +26,7 @@ const renderCountry = function (data, className = '') {
   </article>`
 
   countriesContainer.insertAdjacentHTML('beforeend', html)
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 }
 
 // const renderError = function (msg) {
@@ -183,9 +184,9 @@ const getPosition = function () {
 
 const whereAmI = function () {
   getPosition().then(pos => {
-    const {latitude, longitude} = pos.coords;
+    const { latitude, longitude } = pos.coords;
     const lat = latitude, lng = longitude;
-    console.log( lat, lng)
+    console.log(lat, lng)
     // console.log(pos.coords)
     return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
   })
@@ -205,12 +206,15 @@ const whereAmI = function () {
     })
 
     .then(res => {
-      if(!res.ok) throw new Error(`Country not found (${res.status})`);
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
 
       return res.json()
     })
 
-    .then(data => renderCountry(data[0]))
+    .then(data => {
+      console.log(data)
+      renderCountry(data[0])
+    })
     .catch(err => console.error(err));
 }
 
