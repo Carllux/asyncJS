@@ -29,10 +29,10 @@ const renderCountry = function (data, className = '') {
   countriesContainer.style.opacity = 1;
 }
 
-// const renderError = function (msg) {g
-//   countriesContainer.insertAdjacentHTML('beforeend', msg);
-//   // countriesContainer.style.opacity = 1;
-// }
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentHTML('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+}
 
 
 // const getCountryAndNeighbor = function (country) {
@@ -231,29 +231,38 @@ const getPosition = function () {
   });
 };
 
+// the await fetch is just a syntactic  sugar function of .then nested methods
+// fetch(`https://restcountries.com/v3.1/name/${country}`).then(res=>console.log(res));
 
 const whereAmI = async function () {
-  const pos = await getPosition();
-  const { latitude, longitude } = pos.coords;
-  const lat = latitude, lng = longitude;
-  // console.log(lat, lng)
+  try {
+    const pos = await getPosition();
+    console.log(pos);
+    const { latitude, longitude } = pos.coords;
+    const lat = latitude, lng = longitude;
+    // console.log(lat, lng)
 
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
-  const dataGeo = await resGeo.json()
-  console.log(dataGeo)
-  // the await fetch is just a syntactic  sugar function of .then nested methods
-  // fetch(`https://restcountries.com/v3.1/name/${country}`).then(res=>console.log(res));
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+    if(!resGeo.ok) throw new Error(`Problem getting location data`);
+
+    const dataGeo = await resGeo.json()
+    console.log(dataGeo)
+
+    const res = await fetch(`https://restcountries.com/v3.1/name/${dataGeo.country}`)
+    console.log(res)
+    if(!res.ok) throw new Error(`Problem getting country data`);
+    //  console.log(res);
+    const data = await res.json()
+      //  console.log(data)
+      .then(data => {
+        console.log(data[0])
+        renderCountry(data[0]);
+      })
+    } catch (err) {
+      console.error(err.message);
+      renderError(`${err.message}`)
+    }
 
 
-  const res = await fetch(`https://restcountries.com/v3.1/name/${dataGeo.country}`)
-  //  console.log(res);
-  const data = await res.json()
-    //  console.log(data)
-    .then(data => {
-      console.log(data[0])
-      renderCountry(data[0])
-    })
-}
-
+} 
 whereAmI()
-// btn.addEventListener('click', whereAmI)
