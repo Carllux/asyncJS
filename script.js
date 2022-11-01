@@ -231,13 +231,14 @@ const getPosition = function () {
   });
 };
 
+
 // the await fetch is just a syntactic  sugar function of .then nested methods
 // fetch(`https://restcountries.com/v3.1/name/${country}`).then(res=>console.log(res));
 
 const whereAmI = async function () {
   try {
     const pos = await getPosition();
-    console.log(pos);
+    // console.log(pos);
     const { latitude, longitude } = pos.coords;
     const lat = latitude, lng = longitude;
     // console.log(lat, lng)
@@ -246,10 +247,10 @@ const whereAmI = async function () {
     if(!resGeo.ok) throw new Error(`Problem getting location data`);
 
     const dataGeo = await resGeo.json()
-    console.log(dataGeo)
+    // console.log(dataGeo)
 
     const res = await fetch(`https://restcountries.com/v3.1/name/${dataGeo.country}`)
-    console.log(res)
+    // console.log(res)
     if(!res.ok) throw new Error(`Problem getting country data`);
     //  console.log(res);
     const data = await res.json()
@@ -265,4 +266,10 @@ const whereAmI = async function () {
 
 
 } 
-whereAmI()
+
+whereAmI().then(city => console.log(city))
+console.log(typeof whereAmI)
+console.log('location');
+// const city = 
+// console.log(typeof whereAmI());
+console.log('3: finished getting location');
